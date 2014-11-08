@@ -76,12 +76,28 @@ def group_by_value(todos, value_name, value_list):
     return csv_res
 
 
+def write_group_by_one_filed(todos, output_path, value_name, values_list):
+    csv_file = open(output_path, 'wb')
+    res = group_by_value(todos, value_name, values_list)
+    print 'write: %s' % output_path
+    writer = UnicodeWriter(csv_file)
+
+    row = ['complete']
+    row.extend(values_list)
+    writer.writerow(row)
+
+    for row in res[1:]:
+        output_row = [row[0]]
+        for _, v in row[1].items():
+            output_row.append(str(v))
+        writer.writerow(output_row)
+
+
 def main():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--days', type=int, default=7)
     arg_parser.add_argument('path')
     args = arg_parser.parse_args()
-    todo_csv_path = sys.argv[1]
 
     todo_csv_str = open(args.path, 'rb')
     reader = UnicodeReader(todo_csv_str)
@@ -89,22 +105,11 @@ def main():
     latest_todo = get_latest_todos(todos, days=args.days)
     folders = list(set([x.folder for x in todos]))
     contexts = list(set([x.context for x in todos]))
+    goals = list(set([x.goal for x in todos]))
 
-    group_by_folder_csv_path = args.path + '_group_by_folder.csv'
-    group_by_folder_csv = open(group_by_folder_csv_path, 'wb')
-    res = group_by_value(latest_todo, 'folder', folders)
-    print 'write: %s' % group_by_folder_csv_path
-    group_by_folder_csv_writer = UnicodeWriter(group_by_folder_csv)
-
-    row = ['complete']
-    row.extend(folders)
-    group_by_folder_csv_writer.writerow(row)
-
-    for row in res[1:]:
-        output_row = [row[0]]
-        for _, v in row[1].items():
-            output_row.append(str(v))
-        group_by_folder_csv_writer.writerow(output_row)
+    write_group_by_one_filed(latest_todo, args.path + '_group_by_folder.csv', 'folder', folders)
+    write_group_by_one_filed(latest_todo, args.path + '_group_by_context.csv', 'context', contexts)
+    write_group_by_one_filed(latest_todo, args.path + '_group_by_goal.csv', 'goal', goals)
 
 
 if __name__ == '__main__':
