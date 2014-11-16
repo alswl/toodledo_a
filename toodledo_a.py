@@ -49,8 +49,8 @@ def get_todos_from_reader(reader):
 
 
 def get_latest_todos(todos, days=7):
-    today = datetime.today()
-    return [x for x in todos if today - x.completed <= timedelta(days=days)]
+    today_end = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    return [x for x in todos if today_end - x.completed <= timedelta(days=days)]
 
 
 def group_by_value(todos, value_name, value_list):
@@ -86,7 +86,7 @@ def write_group_by_one_filed(todos, output_path, value_name, values_list):
     row.extend(values_list)
     writer.writerow(row)
 
-    for row in res[1:]:
+    for row in res:
         output_row = [row[0]]
         for _, v in row[1].items():
             output_row.append(str(v))
@@ -102,14 +102,14 @@ def main():
     todo_csv_str = open(args.path, 'rb')
     reader = UnicodeReader(todo_csv_str)
     todos = get_todos_from_reader(reader)
-    latest_todo = get_latest_todos(todos, days=args.days)
+    latest_todos = get_latest_todos(todos, days=args.days)
     folders = list(set([x.folder for x in todos]))
     contexts = list(set([x.context for x in todos]))
     goals = list(set([x.goal for x in todos]))
 
-    write_group_by_one_filed(latest_todo, args.path + '_group_by_folder.csv', 'folder', folders)
-    write_group_by_one_filed(latest_todo, args.path + '_group_by_context.csv', 'context', contexts)
-    write_group_by_one_filed(latest_todo, args.path + '_group_by_goal.csv', 'goal', goals)
+    write_group_by_one_filed(latest_todos, args.path + '_group_by_folder.csv', 'folder', folders)
+    write_group_by_one_filed(latest_todos, args.path + '_group_by_context.csv', 'context', contexts)
+    write_group_by_one_filed(latest_todos, args.path + '_group_by_goal.csv', 'goal', goals)
 
 
 if __name__ == '__main__':
