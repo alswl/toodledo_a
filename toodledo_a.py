@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from __future__ import print_function, unicode_literals
+
 import csv
 import argparse
 import itertools
@@ -79,7 +81,7 @@ def group_by_value(todos, value_name, value_list):
 def write_group_by_one_filed(todos, output_path, value_name, values_list):
     csv_file = open(output_path, 'wb')
     res = group_by_value(todos, value_name, values_list)
-    print 'write: %s' % output_path
+    print('write: %s' % output_path)
     writer = UnicodeWriter(csv_file)
 
     row = ['complete']
@@ -90,6 +92,27 @@ def write_group_by_one_filed(todos, output_path, value_name, values_list):
         output_row = [row[0]]
         for _, v in row[1].items():
             output_row.append(str(v))
+        writer.writerow(output_row)
+
+
+def write_timer(todos, output_path):
+    csv_file = open(output_path, 'wb')
+    date_timer = {}
+    print('write: %s' % output_path)
+    writer = UnicodeWriter(csv_file)
+
+    for todo in todos:
+        if not isinstance(todo.timer, int):
+            continue
+        if todo.completed not in date_timer:
+            date_timer[todo.completed] = 0
+        date_timer[todo.completed] += todo.timer
+
+    row = ['date', 'timer']
+    writer.writerow(row)
+
+    for date, minutes in date_timer.items():
+        output_row = [date.strftime('%Y-%m-%d'), "{0:.2f}".format(minutes / 60.0)]
         writer.writerow(output_row)
 
 
@@ -110,6 +133,8 @@ def main():
     write_group_by_one_filed(latest_todos, args.path + '_group_by_folder.csv', 'folder', folders)
     write_group_by_one_filed(latest_todos, args.path + '_group_by_context.csv', 'context', contexts)
     write_group_by_one_filed(latest_todos, args.path + '_group_by_goal.csv', 'goal', goals)
+
+    write_timer(latest_todos, args.path + '_timer.csv')
 
 
 if __name__ == '__main__':
