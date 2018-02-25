@@ -2,13 +2,10 @@
 
 from __future__ import print_function, unicode_literals
 
-import csv
 import argparse
-import itertools
 from collections import OrderedDict
-import sys
-from datetime import datetime, timedelta, time
-from dateutil import relativedelta
+from datetime import datetime, timedelta
+
 from dateutil.parser import parse
 
 from unicode_csv import UnicodeReader, UnicodeWriter
