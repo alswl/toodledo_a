@@ -6,7 +6,7 @@ Get completed todo csv:
 https://www.toodledo.com/tools/csv.php?completed=1
 
 ```
-c ~/download/toodledo_completed.csv G -v smoking G -v 'waste time' > ~/download/toodledo_completed.csv.filterd
+c ~/download/toodledo_completed_*.csv G -v smoking G -v 'waste time' > ~/download/toodledo_completed.csv.filterd
 python ./toodledo_a.py --days 7 ~/download/toodledo_completed.csv.filterd
 c ~/download/toodledo_completed.csv.filterd_timer.csv | dos2unix | sed 's/^/|/g' | sed 's/$/|/g' | sed 's/,/|/g' | sort -g V
 
