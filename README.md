@@ -11,5 +11,5 @@ python ./toodledo_a.py --days 7 ~/download/toodledo_completed.csv.filterd
 c ~/download/toodledo_completed.csv.filterd_timer.csv | dos2unix | sed 's/^/|/g' | sed 's/$/| | |/g' | sed 's/,/|/g' | sort -g V
 
 
-for i in {27..31}; do open https://www.rescuetime.com/dashboard/for/the/day/of/2018-8-$i; done
+for i in {27..31}; do open https://www.rescuetime.com/dashboard/for/the/day/of/2020-1-$i; done
 ```
