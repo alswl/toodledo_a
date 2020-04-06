@@ -1,5 +1,18 @@
 # alswl's TODO metrics analytics tool
 
+## Install
+
+Python2 required.
+
+```
+mkvirtualenv -p /usr/local/bin/python2 tooledo_a
+workon toodledo_a
+pip install -r ./requirements.txt
+```
+
+
+## Usage
+
 Less input, more output.
 
 Get completed todo csv:
